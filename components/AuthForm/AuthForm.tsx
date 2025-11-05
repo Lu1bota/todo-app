@@ -22,7 +22,7 @@ export default function AuthForm({
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: mutationFn,
     onSuccess: (data) => {
-      router.push("/todos");
+      router.push("/todos/filter/all");
     },
   });
 

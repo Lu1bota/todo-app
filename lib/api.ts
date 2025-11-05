@@ -1,19 +1,15 @@
-import { AuthRequest, RegisterResponse } from "@/types/todo";
+import {
+  AuthRequest,
+  RegisterResponse,
+  Status,
+  TodosResponse,
+} from "@/types/todo";
 import axios from "axios";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   withCredentials: true,
 });
-
-type Status = "todo" | "in progress" | "done";
-
-interface TodosResponse {
-  _id: string;
-  name: string;
-  description: string;
-  status: Status;
-}
 
 interface CreateAndUpdateTodo {
   name: string;
