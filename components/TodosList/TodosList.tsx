@@ -1,9 +1,10 @@
-import css from "./TodosList.module.css";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import toast, { Toaster } from "react-hot-toast";
-import Link from "next/link";
-import { TodosResponse } from "@/types/todo";
-import { deleteTodo } from "@/lib/api";
+'use client';
+
+import css from './TodosList.module.css';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
+import { TodosResponse } from '@/types/todo';
+import { deleteTodo } from '@/lib/api';
 
 interface TodosListProps {
   todos: TodosResponse[];
@@ -14,8 +15,8 @@ export default function TodosList({ todos }: TodosListProps) {
   const mutationDelete = useMutation({
     mutationFn: deleteTodo,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
-      toast.success("Done! The note has been deleted.");
+      queryClient.invalidateQueries({ queryKey: ['todos'] });
+      toast.success('Done! The note has been deleted.');
     },
     onError: () => {
       toast.error("Oops! Something went wrong — the note wasn't deleted.");
@@ -29,7 +30,7 @@ export default function TodosList({ todos }: TodosListProps) {
     <>
       <ul className={css.list}>
         {todos.length > 0 &&
-          todos.map((todo) => (
+          todos.map(todo => (
             <li className={css.listItem} key={todo._id}>
               <h2 className={css.title}>{todo.name}</h2>
               <p className={css.content}>{todo.description}</p>
@@ -50,7 +51,6 @@ export default function TodosList({ todos }: TodosListProps) {
             </li>
           ))}
       </ul>
-      <Toaster />
     </>
   );
 }

@@ -1,5 +1,5 @@
 import TodosView from "@/components/TodosView/TodosView";
-import React from "react";
+import { Status } from "@/types/todo";
 
 interface TodosProps {
   params: Promise<{ slug: string[] }>;
@@ -7,7 +7,8 @@ interface TodosProps {
 
 export default async function Todos({ params }: TodosProps) {
   const { slug } = await params;
-  const status = slug[0] === "all" ? undefined : slug[0];
+  const slugValue = slug[0];
+  const status = slugValue === "all" ? undefined : (slugValue as Status);
 
-  return <TodosView />;
+  return <TodosView initialStatus={status} />;
 }
