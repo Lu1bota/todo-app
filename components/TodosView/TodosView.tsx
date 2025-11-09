@@ -89,7 +89,8 @@ export default function TodosView({ initialStatus }: TodosViewProps) {
         </ul>
       </div>
 
-      {data && <TodosList todos={data} />}
+      <TodosList todos={data ?? []} />
+      {/* {data && <TodosList todos={data} />} */}
     </div>
   );
 }

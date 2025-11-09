@@ -3,13 +3,24 @@ import {
   RegisterResponse,
   Status,
   TodosResponse,
-} from "@/types/todo";
-import axios from "axios";
+} from '@/types/todo';
+import axios from 'axios';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   withCredentials: true,
 });
+
+api.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.resnonse.status !== 401) {
+      return Promise.reject(error);
+    }
+
+    axios.interceptors.response.eject();
+  }
+);
 
 interface CreateAndUpdateTodo {
   name: string;
@@ -19,7 +30,7 @@ interface CreateAndUpdateTodo {
 
 export async function getTodos(status?: Status) {
   try {
-    const res = await api.get<TodosResponse[]>("/todos", {
+    const res = await api.get<TodosResponse[]>('/todos', {
       params: { status },
     });
 
@@ -41,7 +52,7 @@ export async function getTodoById(id: string) {
 
 export async function createTodo(payload: CreateAndUpdateTodo) {
   try {
-    const res = await api.post<TodosResponse>("/todos", payload);
+    const res = await api.post<TodosResponse>('/todos', payload);
 
     return res.data;
   } catch (error) {
@@ -69,7 +80,7 @@ export async function deleteTodo(id: string) {
 
 export async function register(payload: AuthRequest) {
   try {
-    await api.post<RegisterResponse>("/auth/register", payload);
+    await api.post<RegisterResponse>('/auth/register', payload);
 
     const loginRes = await login(payload);
 
@@ -81,7 +92,7 @@ export async function register(payload: AuthRequest) {
 
 export async function login(payload: AuthRequest) {
   try {
-    const res = await api.post<{ message: string }>("/auth/login", payload);
+    const res = await api.post<{ message: string }>('/auth/login', payload);
 
     return res.data;
   } catch (error) {
@@ -91,7 +102,7 @@ export async function login(payload: AuthRequest) {
 
 export async function logout(payload: AuthRequest) {
   try {
-    await api.post("/auth/logout");
+    await api.post('/auth/logout');
   } catch (error) {
     throw error;
   }
