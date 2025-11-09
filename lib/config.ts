@@ -1,4 +1,3 @@
-// config.ts
 import axios from 'axios';
 
 interface QueueItem {
@@ -8,7 +7,7 @@ interface QueueItem {
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
-  withCredentials: true, // Access token йде автоматично через cookie
+  withCredentials: true,
 });
 
 let isRefreshing = false;
@@ -25,7 +24,6 @@ const processQueue = (error: unknown) => {
   failedQueue = [];
 };
 
-// Тільки response interceptor для обробки 401
 api.interceptors.response.use(
   response => response,
   async error => {
@@ -35,13 +33,11 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // Якщо refresh endpoint дав 401 - редирект
     if (originalRequest.url === '/auth/refresh') {
-      window.location.href = '/login';
+      window.location.href = '/sign-in';
       return Promise.reject(error);
     }
 
-    // Якщо вже йде refresh - чекаємо в черзі
     if (isRefreshing) {
       return new Promise((resolve, reject) => {
         failedQueue.push({ resolve, reject });
@@ -54,13 +50,10 @@ api.interceptors.response.use(
     isRefreshing = true;
 
     try {
-      // Refresh токен йде автоматично через cookie
       await api.post('/auth/refresh');
 
-      // Новий access token прийде в httpOnly cookie автоматично
       processQueue(null);
 
-      // Повторюємо початковий запит (новий cookie вже встановлений)
       return api(originalRequest);
     } catch (refreshError) {
       processQueue(refreshError);

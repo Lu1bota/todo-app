@@ -4,23 +4,13 @@ import {
   Status,
   TodosResponse,
 } from '@/types/todo';
-import axios from 'axios';
+// import axios from 'axios';
+import api from './config';
 
-const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-  withCredentials: true,
-});
-
-api.interceptors.response.use(
-  response => response,
-  error => {
-    if (error.resnonse.status !== 401) {
-      return Promise.reject(error);
-    }
-
-    axios.interceptors.response.eject();
-  }
-);
+// const api = axios.create({
+//   baseURL: process.env.NEXT_PUBLIC_API_URL,
+//   withCredentials: true,
+// });
 
 interface CreateAndUpdateTodo {
   name: string;
@@ -100,7 +90,7 @@ export async function login(payload: AuthRequest) {
   }
 }
 
-export async function logout(payload: AuthRequest) {
+export async function logout() {
   try {
     await api.post('/auth/logout');
   } catch (error) {
